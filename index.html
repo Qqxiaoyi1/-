@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>主控人公告平台</title>
+  <style>
+* {margin: 0;padding: 0;box-sizing: border-box;font-family: "微软雅黑", sans-serif;}
+body {background: linear-gradient(160deg, #050a18, #111d3f, #0d2b58);background-attachment: fixed;color: #f8fafc;min-height: 100vh;padding-bottom: 80px;}
+.top-nav {background: rgba(15,23,42,0.95);padding: 18px 16px;text-align: center;box-shadow: 0 3px 15px rgba(0,0,0,0.4);position: sticky;top: 0;z-index: 99;margin-bottom: 20px;}
+.top-nav h1 {color: #06b6d4;font-size: 24px;font-weight: 700;letter-spacing: 1px;}
+.flash-container {position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 999;pointer-events: none;}
+.flash-text {font-size: 32px;color: #fff;text-shadow: 0 0 20px #06b6d4, 0 0 40px #06b6d4;animation: flash 2.2s ease-out forwards;font-weight: bold;}
+@keyframes flash {0%{opacity:0;transform: translate(-50%,-50%) scale(0.7);}40%{opacity:1;transform: translate(-50%,-50%) scale(1.3);}100%{opacity:0;transform: translate(-50%,-50%) scale(1.6);}}
+.content-wrap {padding: 0 16px;max-width: 820px;margin: 0 auto;}
+.master-content {background: rgba(30,41,59,0.9);padding: 24px;border-radius: 14px;margin-bottom: 22px;box-shadow: 0 6px 20px rgba(0,0,0,0.5);border-left: 5px solid #06b6d4;}
+.master-content h3 {color: #22d3ee;margin-bottom: 12px;font-size: 22px;}
+.master-content p {line-height: 1.7;font-size: 16px;color: #e2e8f0;}
+.master-content .time {margin-top: 12px;font-size: 13px;color: #94a3b8;}
+.like-comment {background: rgba(30,41,59,0.9);padding: 20px;border-radius: 14px;box-shadow: 0 6px 20px rgba(0,0,0,0.5);margin-bottom: 20px;}
+.like-btn {background: #0ea5e9;color: #fff;padding: 10px 22px;border-radius: 25px;font-size: 16px;margin-bottom: 18px;font-weight: 500;border: none;cursor: pointer;}
+.like-btn:hover {background: #0284c7;box-shadow: 0 0 12px rgba(14,165,233,0.6);transform: translateY(-2px);}
+.comment-wrap textarea {height: 90px;margin-bottom: 12px;resize: none;border: 1px solid #475569;outline: none;padding: 10px 14px;border-radius: 8px;font-size: 15px;background: rgba(15,23,42,0.8);color: #f8fafc;width: 100%;}
+.comment-wrap textarea:focus {border-color: #38bdf8;box-shadow: 0 0 8px rgba(56,189,248,0.3);}
+#sendComment {background: #10b981;color: #fff;padding: 10px 22px;border-radius: 8px;margin-bottom: 18px;font-weight: 500;border: none;cursor: pointer;width: auto;}
+#sendComment:hover {background: #059669;box-shadow: 0 0 12px rgba(16,185,129,0.6);transform: translateY(-2px);}
+.comment-list {gap: 12px;display: flex;flex-direction: column;}
+.comment-item {background: rgba(15,23,42,0.9);padding: 12px;border-radius: 10px;font-size: 15px;border-left: 3px solid #475569;color: #e2e8f0;}
+.footer-nav {position: fixed;bottom: 0;left: 0;width: 100%;background: rgba(15,23,42,0.95);padding: 15px;text-align: center;box-shadow: 0 -3px 15px rgba(0,0,0,0.4);}
+#myBtn {background: #0ea5e9;color: #fff;padding: 12px 40px;border-radius: 25px;font-size: 17px;font-weight: 500;border: none;cursor: pointer;}
+#myBtn:hover {background: #0284c7;box-shadow: 0 0 12px rgba(14,165,233,0.6);transform: translateY(-2px);}
+.modal {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.8);z-index: 999;display: none;align-items: center;justify-content: center;}
+.modal-box {background: rgba(30,41,59,0.95);padding: 28px;border-radius: 14px;text-align: center;width: 85%;max-width: 320px;box-shadow: 0 8px 25px rgba(0,0,0,0.6);}
+.modal-box h3 {margin-bottom: 22px;color: #06b6d4;font-size: 20px;}
+.login-btn {display: block;background: #10b981;padding: 14px;border-radius: 10px;margin-bottom: 18px;font-size: 16px;font-weight: 500;width: 100%;border: none;color: #fff;text-decoration: none;}
+.login-btn:hover {background: #059669;box-shadow: 0 0 12px rgba(16,185,129,0.6);}
+.close-btn {background: #ef4444;color: #fff;padding: 10px 22px;border-radius: 8px;font-weight: 500;width: 100%;border: none;cursor: pointer;}
+.close-btn:hover {background: #dc2626;box-shadow: 0 0 12px rgba(239,68,68,0.6);}
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <h1>主控人专属公告平台</h1>
+  </nav>
+  <div class="flash-container" id="flashBox"></div>
+  <div class="content-wrap">
+    <div class="master-content" id="masterContent"></div>
+    <div class="like-comment">
+      <button class="like-btn" id="likeBtn">👍 点赞 (<span id="likeNum">0</span>)</button>
+      <div class="comment-wrap">
+        <textarea placeholder="输入你的评论，所有人可见..." id="commentInput"></textarea>
+        <button id="sendComment">发送评论</button>
+        <div class="comment-list" id="commentList"></div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer-nav">
+    <button id="myBtn">我的</button>
+  </footer>
+  <div class="modal" id="myModal">
+    <div class="modal-box">
+      <h3>个人中心</h3>
+      <a href="2.login.html" class="login-btn">主控人登录入口</a>
+      <button class="close-btn" id="closeModal">关闭</button>
+    </div>
+  </div>
+  <script src="js/1.main.js"></script>
+</body>
+</html>

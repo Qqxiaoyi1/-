@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>主控人全权限管控后台</title>
+  <style>
+* {margin: 0;padding: 0;box-sizing: border-box;font-family: "微软雅黑", sans-serif;}
+body {background: linear-gradient(160deg, #050a18, #111d3f, #0d2b58);background-attachment: fixed;color: #f8fafc;min-height: 100vh;padding-bottom: 20px;}
+.admin-nav {background: rgba(15,23,42,0.95);padding: 18px 16px;display: flex;justify-content: space-between;align-items: center;box-shadow: 0 3px 15px rgba(0,0,0,0.4);margin-bottom: 20px;}
+.admin-nav h2 {color: #06b6d4;font-size: 20px;}
+#logoutBtn {background: #ef4444;color: #fff;padding: 8px 16px;border-radius: 6px;border: none;cursor: pointer;}
+#logoutBtn:hover {background: #dc2626;}
+.admin-tabs {display: flex;gap: 8px;padding: 0 16px;margin-bottom: 20px;overflow-x: auto;}
+.tab-btn {background: rgba(30,41,59,0.9);color: #e2e8f0;padding: 10px 16px;border-radius: 8px;white-space: nowrap;border: none;cursor: pointer;}
+.tab-btn.active {background: #0ea5e9;color: #fff;}
+.tab-container {padding: 0 16px;max-width: 820px;margin: 0 auto;}
+.tab-panel {display: none;background: rgba(30,41,59,0.9);padding: 24px;border-radius: 14px;box-shadow: 0 6px 20px rgba(0,0,0,0.5);}
+.tab-panel.active {display: block;}
+.tab-panel h3 {color: #06b6d4;margin-bottom: 20px;font-size: 20px;}
+#publishContent {height: 120px;margin-bottom: 16px;border: 1px solid #475569;outline: none;padding: 10px 14px;border-radius: 8px;font-size: 15px;background: rgba(15,23,42,0.8);color: #f8fafc;width: 100%;resize: none;}
+#publishContent:focus {border-color: #38bdf8;box-shadow: 0 0 8px rgba(56,189,248,0.3);}
+#publishBtn,#firewallSave,#changePwdBtn {background: #10b981;color: #fff;padding: 12px 24px;border-radius: 8px;font-weight: 500;border: none;cursor: pointer;}
+#publishBtn:hover,#firewallSave:hover,#changePwdBtn:hover {background: #059669;box-shadow: 0 0 12px rgba(16,185,129,0.6);}
+.server-item {margin-bottom: 16px;font-size: 16px;color: #e2e8f0;}
+.server-item span {color: #06b6d4;font-weight: 500;}
+.server-btn-group {display: flex;gap: 10px;margin-top: 20px;flex-wrap: wrap;}
+.server-btn {background: #0ea5e9;color: #fff;padding: 10px 16px;border-radius: 8px;border: none;cursor: pointer;}
+.server-btn:hover {background: #0284c7;}
+.firewall-list {display: flex;flex-direction: column;gap: 16px;margin-bottom: 20px;}
+.firewall-item {display: flex;align-items: center;gap: 10px;font-size: 16px;}
+.firewall-item input {width: auto;}
+.input-group {margin-bottom: 20px;text-align: left;}
+.input-group label {display: block;margin-bottom: 8px;color: #e2e8f0;}
+.input-group input {border: 1px solid #475569;outline: none;padding: 10px 14px;border-radius: 8px;font-size: 15px;background: rgba(15,23,42,0.8);color: #f8fafc;width: 100%;}
+.input-group input:focus {border-color: #38bdf8;box-shadow: 0 0 8px rgba(56,189,248,0.3);}
+  </style>
+</head>
+<body>
+  <nav class="admin-nav">
+    <h2>主控人全权限管控后台</h2>
+    <button id="logoutBtn">退出登录</button>
+  </nav>
+  <div class="admin-tabs">
+    <button class="tab-btn active" data-tab="publish">发布内容</button>
+    <button class="tab-btn" data-tab="server">服务器管控</button>
+    <button class="tab-btn" data-tab="firewall">防火墙配置</button>
+    <button class="tab-btn" data-tab="pwd">修改密码</button>
+  </div>
+  <div class="tab-container">
+    <div class="tab-panel active" id="publish">
+      <h3>发布主控内容（全站闪现可见）</h3>
+      <textarea placeholder="输入主控公告内容..." id="publishContent"></textarea>
+      <button id="publishBtn">立即发布</button>
+    </div>
+    <div class="tab-panel" id="server">
+      <h3>全服务器管控中心</h3>
+      <div class="server-item">服务器状态：<span id="serverStatus">✅ 正常运行</span></div>
+      <div class="server-item">在线访客：<span id="onlineNum">0</span> 人</div>
+      <div class="server-item">运行时长：<span id="runTime">00:00:00</span></div>
+      <div class="server-btn-group">
+        <button class="server-btn" onclick="alert('服务器重启指令已发送！')">重启服务器</button>
+        <button class="server-btn" onclick="alert('缓存清理完成，释放空间200MB！')">清理缓存</button>
+        <button class="server-btn" onclick="alert('运行日志：\n2025-12-27 12:00: 服务器启动\n2025-12-27 12:30: 访客访问量15人')">查看运行日志</button>
+      </div>
+    </div>
+    <div class="tab-panel" id="firewall">
+      <h3>全站安全防火墙配置</h3>
+      <div class="firewall-list">
+        <div class="firewall-item">
+          <input type="checkbox" id="sqlSafe" checked>
+          <label for="sqlSafe">防SQL注入攻击</label>
+        </div>
+        <div class="firewall-item">
+          <input type="checkbox" id="xssSafe" checked>
+          <label for="xssSafe">防跨站脚本攻击</label>
+        </div>
+        <div class="firewall-item">
+          <input type="checkbox" id="ipSafe" checked>
+          <label for="ipSafe">IP恶意访问拦截</label>
+        </div>
+        <div class="firewall-item">
+          <input type="checkbox" id="csrfSafe" checked>
+          <label for="csrfSafe">防跨站请求伪造</label>
+        </div>
+        <div class="firewall-item">
+          <input type="checkbox" id="uploadSafe" checked>
+          <label for="uploadSafe">文件上传安全校验</label>
+        </div>
+      </div>
+      <button id="firewallSave">保存防火墙配置</button>
+    </div>
+    <div class="tab-panel" id="pwd">
+      <h3>修改主控人密码</h3>
+      <div class="input-group">
+        <label>原主控密码</label>
+        <input type="password" id="oldPwd" placeholder="输入原密码">
+      </div>
+      <div class="input-group">
+        <label>新主控密码</label>
+        <input type="password" id="newPwd" placeholder="至少6位，含字母+数字">
+      </div>
+      <div class="input-group">
+        <label>确认新密码</label>
+        <input type="password" id="confirmPwd" placeholder="再次输入新密码">
+      </div>
+      <button id="changePwdBtn">确认修改密码</button>
+    </div>
+  </div>
+  <script src="js/3.admin.js"></script>
+</body>
+</html>

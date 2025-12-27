@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>主控人权限登录</title>
+  <style>
+* {margin: 0;padding: 0;box-sizing: border-box;font-family: "微软雅黑", sans-serif;}
+body {background: linear-gradient(160deg, #050a18, #111d3f, #0d2b58);background-attachment: fixed;color: #f8fafc;min-height: 100vh;}
+.login-body {display: flex;align-items: center;justify-content: center;padding: 30px 20px;min-height: 100vh;}
+.login-wrap {background: rgba(30,41,59,0.95);padding: 38px 32px;border-radius: 16px;width: 100%;max-width: 420px;box-shadow: 0 12px 35px rgba(0,0,0,0.6);text-align: center;}
+.login-wrap h2 {color: #06b6d4;margin-bottom: 30px;font-size: 24px;letter-spacing: 1px;}
+.input-group {margin-bottom: 20px;text-align: left;}
+.input-group label {display: block;margin-bottom: 8px;color: #e2e8f0;}
+.input-group input {border: 1px solid #475569;outline: none;padding: 10px 14px;border-radius: 8px;font-size: 15px;background: rgba(15,23,42,0.8);color: #f8fafc;width: 100%;}
+.input-group input:focus {border-color: #38bdf8;box-shadow: 0 0 8px rgba(56,189,248,0.3);}
+#loginBtn {background: #0ea5e9;color: #fff;padding: 12px;border-radius: 8px;font-size: 16px;font-weight: 500;width: 100%;border: none;cursor: pointer;margin-top: 10px;}
+#loginBtn:hover {background: #0284c7;box-shadow: 0 0 12px rgba(14,165,233,0.6);}
+.tip {margin-top: 15px;font-size: 13px;color: #94a3b8;}
+  </style>
+</head>
+<body class="login-body">
+  <div class="login-wrap">
+    <h2>主控人权限登录</h2>
+    <div class="input-group">
+      <label>主控账号</label>
+      <input type="text" id="adminUser" placeholder="请输入账号">
+    </div>
+    <div class="input-group">
+      <label>主控密码</label>
+      <input type="password" id="adminPwd" placeholder="请输入密码">
+    </div>
+    <div class="input-group">
+      <label>验证口令</label>
+      <input type="text" id="verifyCode" placeholder="请输入验证码">
+    </div>
+    <button id="loginBtn">登录管控后台</button>
+    <p class="tip">请输入正确信息登录</p>
+  </div>
+  <script src="js/2.login.js"></script>
+</body>
+</html>
